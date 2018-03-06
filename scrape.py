@@ -3,6 +3,10 @@ import urllib
 import pandas as pd
 import csv
 def main():
+    # So this causes an error because we're running BeautifulSoup 4, which requires Python 3. 
+    # But we're also using urllib which only uses urlopen up to Python 2.7, so the compiler
+    # will give an error either because we're using bs4 in Python 2, or because we're using urllib.urlopen
+    # with Python 3
     
     url = "https://www.basketball-reference.com/leagues/NBA_2018_totals.html    "
     html = urllib.urlopen(url)
