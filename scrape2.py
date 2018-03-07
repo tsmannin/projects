@@ -4,7 +4,7 @@ import pandas as pd
 import csv
 
 def basicStats():
-    url = "https://www.basketball-reference.com/leagues/NBA_2018_totals.html    "
+    url = "https://www.basketball-reference.com/leagues/NBA_2017_totals.html    "
     html = urllib.request.urlopen(url)
 
     soup = BeautifulSoup(html, 'lxml')
@@ -29,7 +29,7 @@ def basicStats():
     # Personal Fouls(27), Points(28)
 
 def advancedStats():
-    url = "https://www.basketball-reference.com/leagues/NBA_2018_advanced.html"
+    url = "https://www.basketball-reference.com/leagues/NBA_2017_advanced.html"
     html = urllib.request.urlopen(url)
 
     soup = BeautifulSoup(html, 'lxml')
@@ -51,7 +51,7 @@ def advancedStats():
     # OWS(18), DWS(19), WS(20), OBPM(21), DBPM(22), BPM(23), VORP(24)
 
 def conferenceStandings():
-    dfs = pd.read_html("https://www.basketball-reference.com/leagues/NBA_2018_standings.html")
+    dfs = pd.read_html("https://www.basketball-reference.com/leagues/NBA_2017_standings.html")
     conference = []
     for df in dfs:
         conference.append(df.values.tolist())#conference list
