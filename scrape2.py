@@ -76,3 +76,17 @@ if __name__ == "__main__":
 
 #i just need to find a way to find all the headers for every stat/conference or we can just organize them through
 #our functions in the classes
+
+# you need to install pandas to run this as well. Type 
+# - "pip install pandas"
+#       or
+# - sudo apt-get install python-pandas
+#       or
+# - sudo easy_install pandas
+
+# to install beautifulsoup
+# -pip install bs4
+#       or
+# -sudo apt-get install python-bs4
+#       or
+# -sudo easy install bs4
