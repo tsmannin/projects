@@ -2,10 +2,8 @@ from bs4 import BeautifulSoup
 import urllib
 import pandas as pd
 import csv
-def main():
-     
-    
-    url = "https://www.basketball-reference.com/leagues/NBA_2018_totals.html    "
+def scrape_player():
+      url = "https://www.basketball-reference.com/leagues/NBA_2018_totals.html    "
     html = urllib.request.urlopen(url)
     
     soup = BeautifulSoup(html, 'lxml')
@@ -15,10 +13,11 @@ def main():
     basic_stats = []
     table_rows = table.find_all('tr')
     for tr in table_rows:
-        td = tr.find_all('td')
-        basic_stats.append([i.text for i in td])
+        td = tr.find_all('td')#looks through all <table data> tags to find data
+        basic_stats.append([i.text for i in td])#gets text from table data 
+     return basic_stats
     #returns a list of the basic stats of the players
-    
+def scrape_advanced_stas():
     url = "https://www.basketball-reference.com/leagues/NBA_2018_advanced.html"
     html = urllib.request.urlopen(url)
     
@@ -29,16 +28,18 @@ def main():
     advanced_List = []
     table_rows = table.find_all('tr')
     for tr in table_rows:
-        td = tr.find_all('td')
+        td = tr.find_all('td') #looks through all <table data> tags to find data
         advanced_List.append([i.text for i in td])#conference list
+    return advanced_list
+
+def scrape_confrence():
+    dfs = pd.read_html("https://www.basketball-reference.com/leagues/NBA_2018.html")    
     
-    
-    
-    dfs = pd.read_html("https://www.basketball-reference.com/leagues/NBA_2018_standings.html")
     conference = []
     for df in dfs:
-        conference.append(df.values.tolist())#conference list
-    
+        conference += df.values.tolist()#iterates through data frame to turn each line into list
+     
+    return conference
 if __name__ == "__main__":
      main()
 #you also need to run this on python2(in terminal type alias python=python2; confirm with python --version to check)
