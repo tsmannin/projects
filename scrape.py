@@ -3,13 +3,10 @@ import urllib
 import pandas as pd
 import csv
 def main():
-    # So this causes an error because we're running BeautifulSoup 4, which requires Python 3. 
-    # But we're also using urllib which only uses urlopen up to Python 2.7, so the compiler
-    # will give an error either because we're using bs4 in Python 2, or because we're using urllib.urlopen
-    # with Python 3
+     
     
     url = "https://www.basketball-reference.com/leagues/NBA_2018_totals.html    "
-    html = urllib.urlopen(url)
+    html = urllib.request.urlopen(url)
     
     soup = BeautifulSoup(html, 'lxml')
     
@@ -23,7 +20,7 @@ def main():
     #returns a list of the basic stats of the players
     
     url = "https://www.basketball-reference.com/leagues/NBA_2018_advanced.html"
-    html = urllib.urlopen(url)
+    html = urllib.request.urlopen(url)
     
     soup = BeautifulSoup(html, 'lxml')
     
@@ -48,3 +45,5 @@ if __name__ == "__main__":
 
 #i just need to find a way to find all the headers for every stat/conference or we can just organize them through
 #our functions in the classes
+
+# you need to install pandas to run this as well. Type "pip install pandas"
