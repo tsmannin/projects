@@ -3,7 +3,7 @@ import urllib
 import pandas as pd
 import csv
 def scrape_player():
-      url = "https://www.basketball-reference.com/leagues/NBA_2018_totals.html    "
+      url = "https://www.basketball-reference.com/leagues/NBA_2017_totals.html    "
     html = urllib.request.urlopen(url)
     
     soup = BeautifulSoup(html, 'lxml')
@@ -18,7 +18,7 @@ def scrape_player():
      return basic_stats
     #returns a list of the basic stats of the players
 def scrape_advanced_stats():
-    url = "https://www.basketball-reference.com/leagues/NBA_2018_advanced.html"
+    url = "https://www.basketball-reference.com/leagues/NBA_2017_advanced.html"
     html = urllib.request.urlopen(url)
     
     soup = BeautifulSoup(html, 'lxml')
@@ -33,7 +33,7 @@ def scrape_advanced_stats():
     return advanced_list
 
 def scrape_conference():
-    dfs = pd.read_html("https://www.basketball-reference.com/leagues/NBA_2018.html")    
+    dfs = pd.read_html("https://www.basketball-reference.com/leagues/NBA_2017.html")    
     
     conference = []
     for df in dfs:
