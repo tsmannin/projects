@@ -17,7 +17,7 @@ def scrape_player():
         basic_stats.append([i.text for i in td])#gets text from table data 
      return basic_stats
     #returns a list of the basic stats of the players
-def scrape_advanced_stas():
+def scrape_advanced_stats():
     url = "https://www.basketball-reference.com/leagues/NBA_2018_advanced.html"
     html = urllib.request.urlopen(url)
     
@@ -32,7 +32,7 @@ def scrape_advanced_stas():
         advanced_List.append([i.text for i in td])#conference list
     return advanced_list
 
-def scrape_confrence():
+def scrape_conference():
     dfs = pd.read_html("https://www.basketball-reference.com/leagues/NBA_2018.html")    
     
     conference = []
