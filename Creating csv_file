@@ -2,6 +2,9 @@ import csv
 
 def create_csv(list_of_players):
     headers = ["Name","a","b","c","d","e","f","g","h","i"] #Put the headers here.
+    #teamnames = []
+    #for i in teamnames:
+    #   with open("{}.csv".format(teamnames[i], 'w', newline='') as f:
     with open("filename.csv", 'w', newline='') as f: #change filename
         writer = csv.writer(f)
         writer.writerow(headers)
