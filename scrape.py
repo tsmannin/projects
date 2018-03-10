@@ -2,6 +2,36 @@ from bs4 import BeautifulSoup
 import urllib
 import pandas as pd
 import csv
+
+def scrape_team(url)
+    html = urllib.urlopen(url)
+    
+    soup = BeautifulSoup(html, 'lxml')
+    header = []
+    tabh = soup.find_all('thead')
+    for tr in tabh:
+        tr = tr.find_all('th')
+        header += [i.text for i in tr]#looks for headers
+    
+    tbody = soup.find_all('tbody')
+    numbers = []
+    roster = []
+    for t in tbody:
+        tr = t.find_all('tr')
+        th = t.find_all('th')
+        for i in th:
+            numbers.append([i.text])#numbers of all players
+        for i,c in enumerate(tr):
+            td = c.find_all('td')
+            roster.append([f.text for f in td])
+            roster[i].insert(0,numbers[i][0])#inludes number of each player
+            
+    roster.insert(0,header)#includes headers to top of list
+    return(roster)#returns a list of all players and headers
+
+
+
+
 def scrape_player():
       url = "https://www.basketball-reference.com/leagues/NBA_2017_totals.html    "
     html = urllib.request.urlopen(url)
