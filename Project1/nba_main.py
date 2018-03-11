@@ -24,30 +24,33 @@ def build_team_url(team):
         print("sorry No Team by That Name")
  #scrapes the data of a specific player
 def scrape_player(url):
-    html = urllib.urlopen(url)
-    
-    soup = BeautifulSoup(html, 'lxml')
-    
-    table = soup.find('table')
-    
-    header = []
-    table_headers = table.find_all('thead')#we get the headers of each collumn
-    for th in table_headers:
-        t = th.find_all('th')
-        header = [i.text for i in t]
-    print(header)
-    
-    other = []
-    advanced_List = []
-    table_rows = table.find_all('tr')
-    for tr in table_rows:
-        a = tr.find_all('a')
-        td = tr.find_all('td')
-        advanced_List = [i.text for i in a]#makes a list containing dates
-        if advanced_List and advanced_List[0] == '2016-17':#checks date 
-            other += [i.text for i in td]#inculdes it to our other list
-    print(other)
-    
+    matchObj = re.match(r'https://www.basketball-reference.com/players/b/(.*)02.html', url, re.M|re.I)
+    if matchObj:
+            html = urllib.urlopen(url)
+
+            soup = BeautifulSoup(html, 'lxml')
+
+            table = soup.find('table')
+
+            header = []
+            table_headers = table.find_all('thead')#we get the headers of each collumn
+            for th in table_headers:
+                t = th.find_all('th')
+                header = [i.text for i in t]
+            print(header)
+
+            other = []
+            advanced_List = []
+            table_rows = table.find_all('tr')
+            for tr in table_rows:
+                a = tr.find_all('a')
+                td = tr.find_all('td')
+                advanced_List = [i.text for i in a]#makes a list containing dates
+                if advanced_List and advanced_List[0] == '2016-17':#checks date 
+                    other += [i.text for i in td]#inculdes it to our other list
+            print(other)
+     else:
+            return []    
 def nba_options():
     print("1. Conference")
     print("2. Team")
