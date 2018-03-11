@@ -2,7 +2,39 @@ from bs4 import BeautifulSoup
 import urllib
 import pandas as pd
 import csv
+def scrape_conference(conference)
+     html = urllib.urlopen(url)
 
+        soup = BeautifulSoup(html, 'lxml')
+
+        header = []
+        teams = []
+        stats = []
+        row = -1
+        tabh = soup.find_all('thead')
+        table = soup.find_all('tbody')
+        for i,c in enumerate(tabh):
+            conf = c.text.lower()
+
+            if conf.find(conference) > 0 and i < 2:#not case sensitive
+                td = c.find_all('th')
+                header.append([f.text for f in td])
+                row = i
+        if row > 0:   #if we find the correct conference it will not be -1
+            for i,c in enumerate(table):
+                if i == row:
+                    tr = c.find_all('tr')
+                    a = c.find_all('a')
+                    for j in a:
+                        teams.append([j.text])
+                    for f, c in enumerate(tr):
+                        td = c.find_all('td')
+                        stats.append([l.text for l in td])
+                        stats[f].insert(0,teams[f][0])
+        else:
+            print("Sorry no conference Matching that name")
+            return []
+        return stats
 def scrape_team(url)
     html = urllib.urlopen(url)
     
