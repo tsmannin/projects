@@ -83,8 +83,23 @@ class Player:
     def set_player(self, newPlayer):
         self._player = newPlayer
 
-    def read_player_csv(self, playerCsv):
-        pass
+    def update_player_csv(self, playerCsv, updateCat):
+         # Read in the CSV data
+        with open(playerCsv, 'r', newline = "") as f:
+            reader = csv.DictReader(f)
+            data = list(reader)
+            headers = reader.fieldnames
+            print(data)
+
+        # Write back in the CSV file
+        with open(playerCsv, 'w', newline = "") as f:
+            writer = csv.DictWriter(f, headers)
+            writer.writeheader()
+            for row in data:
+                if row.values() == updateCat:
+                    user = input("Updating " + updateCat + " category. Enter new data: ")
+                    row[updateCat] = str(user)
+                    writer.writerow(row)
 
     def create_player_csv(self):
         # not sure if headers is at 0 or name is
@@ -123,7 +138,7 @@ def main():
     c = ['Cole Aldrich', 'C', '28', 'MIN', '62', '0', '531', '45', '86', '.523', '0', '0', '',
     '45', '86', '.523', '.523', '15', '22', '.682', '51', '107', '158', '25', '25', '23', '17', '85', '105']
     g = Player(c)
-    g.create_player_csv(header)
+    g.create_player_csv()
 
 if __name__ == "__main__":
     main()
