@@ -28,9 +28,17 @@ class Conference:
             writer.writerow(self.get_teams()[1:])
 
     def display(self):
-        print(self.get_name() + '\n')
-        for line in self.get_teams():
-            print(line)
+        team = selg.get_teams()
+        string = ''
+        for i in team[0]:
+            string += '{message:{fill}{align}{width}}'.format(message=i, fill=' ', align='<', width=25)
+        string += '\n'
+        team[1].pop(4)
+        for i in team[1:]:
+            for j in i:
+                string += '{message:{fill}{align}{width}}'.format(message=j, fill='', align='<', width=25)
+            string += '\n'
+        print(string)
 
 
 # team class has two data attributes.
