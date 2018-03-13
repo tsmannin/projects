@@ -15,11 +15,8 @@ class Conference:
         filename = self.get_name() + ".csv"
         with open(filename, 'w', newline = "") as f:
             writer = csv.writer(f)
-            self._teams[0].pop(0)
-            self._teams[0].insert(0,"Team")
             writer.writerow(self.get_teams()[0])
-            for i in self._teams[1:]:
-                writer.writerow(i)
+            writer.writerow(self.get_teams()[1:])
 
     def display(self):
         team = self.get_teams()
@@ -28,7 +25,6 @@ class Conference:
             string += '{message:{fill}{align}{width}}'.format(message=i, fill=' ', align='<', width=25)
         string += '\n'
         team[1].pop(4)
-        team[1].insert(4,'--')
         for i in team[1:]:
             for j in i:
                 string += '{message:{fill}{align}{width}}'.format(message=j, fill='', align='<', width=25)
@@ -53,15 +49,13 @@ class Team:
     def winning_percentage(self):
         pass
 
-    def create_team_csv(self):
-        # not sure if headers is at 0 or name is
-        #print(self.get_players()[1], type(self.get_players()[1]))
-        filename = self._name.upper() + ".csv"
-        with open(filename, 'w', newline = "") as f:
+    def create_team_csv(self, team):
+        team = team + ".csv"
+        with open(team, 'w', newline = "") as f:
             writer = csv.writer(f)
             writer.writerow(self.get_players()[0])
             for i in self.get_players()[1:]:
-                writer.writerow(i)
+                writer.writerow([i][0])
                 #writer.writerow()
 
     #salary cap is adding all the players salary on the team for that year
@@ -77,9 +71,9 @@ class Team:
         string += '\n'
         for i in team[1:]:
             i.pop(6)
-            for j, c in enumerate(i):
-                string += '{message:{fill}{align}{width}}'.format(message=c, fill='', align='<', width=23)
-            string += '\n'
+        for j, c in enumerate(i):
+            string += '{message:{fill}{align}{width}}'.format(message=c, fill='', align='<', width=23)
+        string += '\n'
         print(string)
 
 
@@ -87,9 +81,9 @@ class Team:
 # player is a list of a player's stats
 
 class Player:
-    def __init__(self, name ,player):
+    def __init__(self, player):
         self._player = player
-        self._name = name
+
     def get_player(self):
         return self._player
 
@@ -116,7 +110,7 @@ class Player:
 
     def create_player_csv(self):
         # not sure if headers is at 0 or name is
-        filename = self._name + ".csv"
+        filename = self.get_player()[1] + ".csv"
         with open(filename, 'w', newline = "") as f:
             writer = csv.writer(f)
             writer.writerow(self.get_player()[0])
