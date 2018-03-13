@@ -91,9 +91,11 @@ def process_csv_creation(choice):
         pass
 
 def store_file():
-    savedir = Path('/home/ubuntu/workspace/python')
+    # User needs to enter directory they wish to store their file in
+    savedir = Path(input("Enter directory you wish to store file in: "))
     if not savedir.exists():
         savedir.mkdir()
+    myDir = Path('/home/ubuntu/workspace/cs231/projects/project1')
     file_name = input("What is the name of the file you want to store? (include the extension)")
     #file_name = savedir + Path(file_name)
     print("Where would you like to store the file?")
@@ -102,28 +104,26 @@ def store_file():
         conference_path = savedir / Path("Conferences")
         if not conference_path.exists():
             conference_path.mkdir()
-        file = list(savedir.glob(file_name))
         move_to = conference_path / Path(file_name)
-        for f in file:
-            f.rename(move_to)
+        current = myDir / Path(file_name)
+        os.rename(current, move_to)
     elif choice == 2:
         team_path = savedir / Path("Teams")
         if not team_path.exists():
             team_path.mkdir()
-        file = list(savedir.glob(file_name))
         move_to = team_path / Path(file_name)
-        for f in file:
-            f.rename(move_to)
+        current = myDir / Path(file_name)
+        os.rename(current, move_to)
     elif choice == 3:
         player_path = savedir / Path("Players")
         if not player_path.exists():
             player_path.mkdir()
-        file = list(savedir.glob(file_name))
         move_to = player_path / Path(file_name)
-        for f in file:
-            f.rename(move_to)
+        current = myDir / Path(file_name)
+        os.rename(current, move_to)
     elif choice == 4:
         pass
+
     
     
     
