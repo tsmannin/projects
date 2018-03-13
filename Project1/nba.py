@@ -81,8 +81,9 @@ class Team:
 # player is a list of a player's stats
 
 class Player:
-    def __init__(self, player):
+    def __init__(self, name ,player):
         self._player = player
+        self._name = name
 
     def get_player(self):
         return self._player
