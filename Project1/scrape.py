@@ -15,7 +15,7 @@ def scrape_conference(conference):
     table = soup.find_all('tbody')
     for i,c in enumerate(tabh):
         conf = c.text.lower()
-        if conf.find(conference) > 0 and i <= 2:#not case sensitive
+        if conf.find(conference.lower()) > 0 and i <= 2:#not case sensitive
             td = c.find_all('th')
             for f in td:
                 header.append(f.text)
