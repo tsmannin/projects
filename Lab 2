@@ -1,0 +1,245 @@
+import csv
+import sqlite3 as sq
+def connect():
+    #connect to the databse
+    conn = sq.connect("UFC.sqlite")
+    #create a cursor to the database
+    curr = conn.cursor()
+    return conn,curr
+"""
+create_db creates the databases
+"""
+def fill_heavyweight_db(conn, cur):
+    with open('Heavyweights.csv', 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        header = reader.fieldnames
+        phone_number = 7144825333
+        for i in reader:
+            stats = []
+            for j in header:
+                stats.append(i[j])
+            cmd = """
+            INSERT INTO Mens_Heavyweights(
+            name,
+            age,
+            sex,
+            phone_number,
+            fights,
+            strikes,
+            strike_accuracy,
+            take_downs,
+            take_down_accuracy,
+            knock_downs,
+            reversals,
+            submissions
+            )
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """
+            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            conn.commit
+            phone_number += 3
+
+def fill_middleweight_db(conn, cur):
+    with open('middleweight.csv', 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        header = reader.fieldnames
+        phone_number = 7145327921
+        for i in reader:
+            stats = []
+            for j in header:
+                stats.append(i[j])
+            cmd = """
+            INSERT INTO Mens_Middleweights(
+            name,
+            age,
+            sex,
+            phone_number,
+            fights,
+            strikes,
+            strike_accuracy,
+            take_downs,
+            take_down_accuracy,
+            knock_downs,
+            reversals,
+            submissions
+            )
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """
+            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            conn.commit
+            phone_number += 3
+            
+def fill_womens_bantamweight_db(conn, cur):
+    with open('womensbantamweight.csv', 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        header = reader.fieldnames
+        phone_number = 7145996090
+        for i in reader:
+            stats = []
+            for j in header:
+                stats.append(i[j])
+            cmd = """
+            INSERT INTO Womens_Bantaweight(
+            name,
+            age,
+            sex,
+            phone_number,
+            fights,
+            strikes,
+            strike_accuracy,
+            take_downs,
+            take_down_accuracy,
+            knock_downs,
+            reversals,
+            submissions
+            )
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """
+            cur.execute(cmd,(stats[0],stats[1],'Female',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            conn.commit
+            phone_number += 3     
+
+def fill_womens_strawweight_db(conn, cur):
+    with open('womenstrawweight.csv', 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        header = reader.fieldnames
+        phone_number = 7143172612
+        for i in reader:
+            stats = []
+            for j in header:
+                stats.append(i[j])
+            cmd = """
+            INSERT INTO Womens_Bantaweight(
+            name,
+            age,
+            sex,
+            phone_number,
+            fights,
+            strikes,
+            strike_accuracy,
+            take_downs,
+            take_down_accuracy,
+            knock_downs,
+            reversals,
+            submissions
+            )
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """
+            cur.execute(cmd,(stats[0],stats[1],'Female',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            conn.commit
+            phone_number += 3    
+            
+def create_db(conn, cur):
+    cur.executescript("""
+    DROP TABLE IF EXISTS Mens_Heavyweights;
+    DROP TABLE IF EXISTS Mens_Middleweights;
+    DROP TABLE IF EXISTS Womens_Bantaweight;
+    DROP TABLE IF EXISTS Womens_Strawweight;
+    """)
+    
+    # create Tables
+    create_tables = """
+    CREATE TABLE Mens_Heavyweights(
+        name TEXT,
+        age TEXT,
+        sex TEXT,
+        phone_number INTEGER UNIQUE,
+        fights TEXT,
+        strikes INTEGER,
+        strike_accuracy REAL,
+        take_downs INTEGER,
+        take_down_accuracy REAL,
+        knock_downs INTEGER,
+        reversals INTEGER,
+        submissions INTEGER
+        );
+    CREATE TABLE Mens_Middleweights(
+        name TEXT,
+        age TEXT,
+        sex TEXT,
+        phone_number INTEGER UNIQUE,
+        fights TEXT,
+        strikes INTEGER,
+        strike_accuracy REAL,
+        take_downs INTEGER,
+        take_down_accuracy REAL,
+        knock_downs INTEGER,
+        reversals INTEGER,
+        submissions INTEGER
+        );
+    CREATE TABLE Womens_Bantaweight(
+        name TEXT,
+        age TEXT,
+        sex TEXT,
+        phone_number INTEGER UNIQUE,
+        fights TEXT,
+        strikes INTEGER,
+        strike_accuracy REAL,
+        take_downs INTEGER,
+        take_down_accuracy REAL,
+        knock_downs INTEGER,
+        reversals INTEGER,
+        submissions INTEGER
+        );
+    CREATE TABLE Womens_Strawweight(
+        name TEXT,
+        age TEXT,
+        sex TEXT,
+        phone_number INTEGER UNIQUE,
+        fights TEXT,
+        strikes INTEGER,
+        strike_accuracy REAL,
+        take_downs INTEGER,
+        take_down_accuracy REAL,
+        knock_downs INTEGER,
+        reversals INTEGER,
+        submissions INTEGER
+        );
+    """
+    cur.executescript(create_tables)
+    conn.commit
+
+def test_db(conn,cur):
+    cmd = """
+    SELECT * FROM Mens_Heavyweights
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        print(i)
+    
+    cmd = """
+    SELECT * FROM Mens_Middleweights
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        print(i)
+    
+    cmd = """
+    SELECT * FROM Womens_Bantaweight
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        print(i)
+    
+    cmd = """
+    SELECT * FROM Womens_Strawweight
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        print(i)
+    
+    
+def main():
+    conn , cur = connect()
+    create_db(conn,cur)
+    fill_heavyweight_db(conn,cur)
+    fill_middleweight_db(conn,cur)
+    fill_womens_bantamweight_db(conn,cur)
+    fill_womens_strawweight_db(conn,cur)
+    test_db(conn,cur)
+if __name__ == "__main__":
+    main()
