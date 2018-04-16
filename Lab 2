@@ -26,16 +26,16 @@ def fill_heavyweight_db(conn, cur):
             phone_number,
             fights,
             strikes,
-            strike_accuracy,
             take_downs,
-            take_down_accuracy,
             knock_downs,
             reversals,
-            submissions
+            submissions,
+            strike_accuracy,
+            take_down_accuracy
             )
             VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
             conn.commit
             phone_number += 3
 
@@ -56,16 +56,16 @@ def fill_middleweight_db(conn, cur):
             phone_number,
             fights,
             strikes,
-            strike_accuracy,
             take_downs,
-            take_down_accuracy,
             knock_downs,
             reversals,
-            submissions
+            submissions,
+            strike_accuracy,
+            take_down_accuracy
             )
             VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
             conn.commit
             phone_number += 3
             
@@ -86,16 +86,16 @@ def fill_womens_bantamweight_db(conn, cur):
             phone_number,
             fights,
             strikes,
-            strike_accuracy,
             take_downs,
-            take_down_accuracy,
             knock_downs,
             reversals,
-            submissions
+            submissions,
+            strike_accuracy,
+            take_down_accuracy
             )
             VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'Female',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
             conn.commit
             phone_number += 3     
 
@@ -116,18 +116,50 @@ def fill_womens_strawweight_db(conn, cur):
             phone_number,
             fights,
             strikes,
-            strike_accuracy,
             take_downs,
-            take_down_accuracy,
             knock_downs,
             reversals,
-            submissions
+            submissions,
+            strike_accuracy,
+            take_down_accuracy
             )
             VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'Female',phone_number,stats[2],int(stats[3]),float(stats[4]),int(stats[5]),float(stats[6]),int(stats[7]),int(stats[8]),int(stats[9])))
+            cur.execute(cmd,(stats[0],stats[1],'male',phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
             conn.commit
             phone_number += 3    
+
+def fill_awards(conn,cur):
+    with open('awards.csv', 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        header = reader.fieldnames
+    
+        for i in reader:
+            stats = []
+            for j in header:
+                stats.append(i[j])
+            cmd = """
+            INSERT INTO Awards(event,place,award)
+            VALUES(?,?,?)
+            """
+            cur.execute(cmd,(stats[0],stats[1],stats[2]))
+            conn.commit
+
+def fill_competitions(conn,cur):
+    with open('competitions.csv', 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        header = reader.fieldnames
+        for i in reader:
+            stats = []
+            for j in header:
+                stats.append(i[j])
+            print(stats)
+            cmd = """
+            INSERT INTO Competitions(event,start_time,date)
+            VALUES(?,?,?)
+            """
+            cur.execute(cmd,(stats[0],stats[1],stats[2]))
+            conn.commit
             
 def create_db(conn, cur):
     cur.executescript("""
@@ -135,6 +167,8 @@ def create_db(conn, cur):
     DROP TABLE IF EXISTS Mens_Middleweights;
     DROP TABLE IF EXISTS Womens_Bantaweight;
     DROP TABLE IF EXISTS Womens_Strawweight;
+    DROP TABLE IF EXISTS Awards;
+    DROP TABLE IF EXISTS Competitions;
     """)
     
     # create Tables
@@ -144,57 +178,67 @@ def create_db(conn, cur):
         age TEXT,
         sex TEXT,
         phone_number INTEGER UNIQUE,
-        fights TEXT,
+        fights INTEGER,
         strikes INTEGER,
-        strike_accuracy REAL,
         take_downs INTEGER,
-        take_down_accuracy REAL,
         knock_downs INTEGER,
         reversals INTEGER,
-        submissions INTEGER
+        submissions INTEGER,
+        strike_accuracy REAL,
+        take_down_accuracy REAL
         );
     CREATE TABLE Mens_Middleweights(
         name TEXT,
         age TEXT,
         sex TEXT,
         phone_number INTEGER UNIQUE,
-        fights TEXT,
+        fights INTEGER,
         strikes INTEGER,
-        strike_accuracy REAL,
         take_downs INTEGER,
-        take_down_accuracy REAL,
         knock_downs INTEGER,
         reversals INTEGER,
-        submissions INTEGER
+        submissions INTEGER,
+        strike_accuracy REAL,
+        take_down_accuracy REAL
         );
     CREATE TABLE Womens_Bantaweight(
         name TEXT,
         age TEXT,
         sex TEXT,
         phone_number INTEGER UNIQUE,
-        fights TEXT,
+        fights INTEGER,
         strikes INTEGER,
-        strike_accuracy REAL,
         take_downs INTEGER,
-        take_down_accuracy REAL,
         knock_downs INTEGER,
         reversals INTEGER,
-        submissions INTEGER
+        submissions INTEGER,
+        strike_accuracy REAL,
+        take_down_accuracy REAL
         );
     CREATE TABLE Womens_Strawweight(
         name TEXT,
         age TEXT,
         sex TEXT,
         phone_number INTEGER UNIQUE,
-        fights TEXT,
+        fights INTEGER,
         strikes INTEGER,
-        strike_accuracy REAL,
         take_downs INTEGER,
-        take_down_accuracy REAL,
         knock_downs INTEGER,
         reversals INTEGER,
-        submissions INTEGER
+        submissions INTEGER,
+        strike_accuracy REAL,
+        take_down_accuracy REAL
         );
+    CREATE TABLE Awards(
+        event TEXT,
+        place TEXT,
+        award TEXT
+    );
+    CREATE TABLE Competitions(
+        event TEXT,
+        start_time TEXT,
+        date TEXT
+    )
     """
     cur.executescript(create_tables)
     conn.commit
@@ -231,7 +275,65 @@ def test_db(conn,cur):
     stats = cur.fetchall()
     for i in stats:
         print(i)
+        
+    cmd = """
+    SELECT * FROM Awards
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        print(i)
+        
+    cmd = """
+    SELECT * FROM Competitions
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        print(i)
+        
+def add_fighter(conn,cur,database):
     
+    cmd = "SELECT COUNT(*) FROM {}".format(database)
+    cur.execute(cmd)
+    size = cur.fetchall()
+    if size[0][0] >= 16:
+        print("Sorry, this competition is full")
+    else:
+        text = ['name','age','sex','phone number']
+        integer = ['fights','strikes','take downs','knock downs','reversals','submissions']
+        DOUBLE = ['strike accuracy','take down accuracy']
+        print("In order to add a comptetor you need to provid some information")
+        tupe = ()
+        for i in text:
+            info = input("Enter the competetors {} ".format(i))
+            tupe += (info,)
+        for i in integer:
+            info = int(input("How many {} do they have ".format(i)))
+            tupe += (info,)
+        for i in DOUBLE:
+            info = float(input("What is their {} ".format(i)))
+            tupe += (info,)
+        
+        cmd = """
+            INSERT INTO {}(
+            name,
+            age,
+            sex,
+            phone_number,
+            fights,
+            strikes,
+            take_downs,
+            knock_downs,
+            reversals,
+            submissions,
+            strike_accuracy,
+            take_down_accuracy
+            )
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """.format(database)
+        cur.execute(cmd,tupe)
+        conn.commit
 def generate_graph(x, y):
     # Graphing how fighting stats correspond to wins
     # Paramters will be x and y axis
