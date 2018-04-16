@@ -232,6 +232,21 @@ def test_db(conn,cur):
     for i in stats:
         print(i)
     
+def generate_graph(x, y):
+    # Graphing how fighting stats correspond to wins
+    # Paramters will be x and y axis
+    # x = fight stats number (all stat categories added together)
+    # y = average number of wins (fighters likely to have same fight stats)
+    fig = plt.figure()
+    ax = fig.subplots(1, 1)
+
+    ax.bar(x, y, width=5)
+    ax.set_title("How Fighter's Stats Correspond to Wins")
+    ax.set_xlabel("Fighting Stat Number (FSN)")
+    ax.set_ylabel("Average Number of Wins")
+
+    fig.savefig("UFC_Graph.png")
+
 # NEEDED FUNCTIONS
 # User functions (modify and delete records)
 # Many-to-Many relationship with corresponding junction table
@@ -254,6 +269,7 @@ def main():
     fill_middleweight_db(conn,cur)
     fill_womens_bantamweight_db(conn,cur)
     fill_womens_strawweight_db(conn,cur)
-    test_db(conn,cur)
+    #test_db(conn,cur)
+    #generate_graph([80, 70, 90, 50], [1, 2, 3, 4])
 if __name__ == "__main__":
     main()
