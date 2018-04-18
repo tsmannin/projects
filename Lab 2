@@ -1,5 +1,6 @@
 import csv
 import sqlite3 as sq
+import random
 def connect():
     #connect to the databse
     conn = sq.connect("UFC.sqlite")
@@ -9,6 +10,360 @@ def connect():
 """
 create_db creates the databases
 """
+def print_records(records, column_headers):
+    """Pretty print the records with given column headers"""
+    # Create a format string making each column left aligned and 30 characters wide
+    fmt_string = "{:<20}" * len(column_headers)
+
+    # Print header row
+    print(fmt_string.format(*column_headers))
+
+    # Print records
+    # records is a list of tuples
+    # each tuple is a specific record in the database
+    # *row expands the tuple into separate arguments for format
+    for row in records:
+        print(fmt_string.format(*row))
+    print()
+#we update the csv file then call the fill database
+def update_records(conn,cur):
+    print("\nWhat competition are they in")
+    print("1. Mens Heavyweights")
+    print("2. Mens Middleweights")
+    print("3. Womens Bantamweight")
+    print("4. Womens Strawweight")
+    while True:
+        try: 
+            i = int(input())
+        except ValueError:
+            print("please enter one of the options")
+        else:
+            if i > 4:
+                print("please enter a valid number")
+            else:
+                break
+    if i == 1:
+        data = "Mens_Heavyweights"
+        #fname = 
+    elif i == 2:
+        data = "Mens_Middleweights"
+        #fanme = 
+    elif i == 3:
+        data = "Womens_Bantamweight"
+        #fname = 
+    elif i == 4:
+        data = "Womens_Strawweight"
+        #fname
+      
+    name = input("What is the fighters name(Last Name, First): ").lower()
+    print(name)
+    
+    stats_list = ["ID","Phone_Number","Fights","strikes","take_downs","reversals","submissions","strike_accuracy","take_down_accuracy"]
+    user_change = []
+    print("\nWhat stats would you like to change")
+    for i in (stats_list):
+        print("\nWould you like to update ",i)
+        user = input("\nY or N? ")
+        if user.lower() == 'y':
+            user_change.append(i.lower())
+    
+    for i in user_change:
+        try:
+            new_data = input("\nWhat is the new data for the competetors {} ".format(i))
+            cmd = '''UPDATE {} SET {} = {} WHERE LOWER({}.name) = (?)'''.format(data,i,new_data,data)
+            
+            cur.execute(cmd,(name,))
+            conn.commit
+        except NameError:
+            print ("Name Error")
+        except ValueError:
+            print ("value error")
+        except IOError:
+            print("IO error") 
+    
+    
+def delete_fighter(conn, cur):
+    while True:
+        try: 
+            name = input("What fighter do you want to delete(last name, first): ")
+        except ValueError:
+            print("please enter a number")
+        else:
+            break
+    
+    print("\nWhat competition are they in")
+    print("1. Mens Heavyweights")
+    print("2. Mens Middleweights")
+    print("3. Womens Bantamweight")
+    print("4. Womens Strawweight")
+    while True:
+        try: 
+            i = int(input())
+        except ValueError:
+            print("please enter one of the options")
+        else:
+            if i > 4:
+                print("please enter a valid number")
+            else:
+                break
+    
+    if i == 1:
+        data = "Mens_Heavyweights"
+    elif i == 2:
+        data = "Mens_Middleweights"
+    elif i == 3:
+        data = "Womens_Bantamweight"
+    elif i == 4:
+        data = "Womens_Strawweight"
+    cur.execute("""SELECT {}.name FROM {} WHERE LOWER({}.name) = (?)""".format(data,data,data),(name.lower(),))
+    if len(cur.fetchall()) > 0:
+        print("\nOkay all done")
+        cmd = """DELETE FROM {} WHERE LOWER({}.name) = (?)""".format(data,data)
+        cur.execute(cmd,(name.lower(),))
+    else:
+        print("\nSorry couldn't find {}".format(name))
+    
+    # cmd = """DELETE FROM {} WHERE LOWER({}.name) = (?)""".format(data,data)
+    
+    # cur.execute(cmd,(name.lower(),))
+    
+    
+def get_fighter_infor(conn,cur):
+    # while True:
+    #     try: 
+    #         ID = int(input("What is the fighters ID: "))
+    #     except ValueError:
+    #         print("please enter a number")
+    #     else:
+    #         break
+    name = input("Whats the fighters name: ")
+    age = input("Whats the fighters age: ")
+    print("\nWhat competition are they in")
+    print("1. Mens Heavyweights")
+    print("2. Mens Middleweights")
+    print("3. Womens Bantamweight")
+    print("4. Womens Strawweight")
+    while True:
+        try: 
+            i = int(input())
+        except ValueError:
+            print("please enter one of the options")
+        else:
+            if i > 4:
+                print("please enter a valid number")
+            else:
+                break
+   
+    if i == 1:
+        data = "Mens_Heavyweights"
+    elif i == 2:
+        data = "Mens_Middleweights"
+    elif i == 3:
+        data = "Womens_Bantamweight"
+    elif i == 4:
+        data = "Womens_Strawweight"
+    
+    
+    
+def get_fighter_by_id(conn,cur):
+    while True:
+        try: 
+            ID = int(input("What is the fighters ID: "))
+        except ValueError:
+            print("please enter a number")
+        else:
+            break
+    
+    print("\nWhat competition are they in")
+    print("1. Mens Heavyweights")
+    print("2. Mens Middleweights")
+    print("3. Womens Bantamweight")
+    print("4. Womens Strawweight")
+    while True:
+        try: 
+            i = int(input())
+        except ValueError:
+            print("please enter one of the options")
+        else:
+            if i > 4:
+                print("please enter a valid number")
+            else:
+                break
+   
+    if i == 1:
+        data = "Mens_Heavyweights"
+    elif i == 2:
+        data = "Mens_Middleweights"
+    elif i == 3:
+        data = "Womens_Bantamweight"
+    elif i == 4:
+        data = "Womens_Strawweight"
+    
+    cmd ="""Select * FROM {} WHERE {}.id = {} """.format(data,data,ID)
+    cur.execute(cmd)
+    lis = cur.fetchall()
+    if len(lis) > 0:
+        print("\nWere you looking for: ")
+        print_records(lis, ["Name","Age","Sex","ID","Phone Number","Fights","Strikes","Take Downs","Reversals","Submissions","Strike Acurracy","Take Down Acurracy"])
+    else:
+        print("\nSorry this person doesn't exist")
+        
+        
+
+def getWinner(lis1,lis2):
+    sum1 = 0 
+    sum2 = 0
+    for i in range(0 , 7):
+        sum1 += lis1[i]
+        sum2 += lis2[i]
+    sums = [sum1,sum2]
+    for i in range(2):
+        if i > 1300:
+            sums[i] = sums[i] * random.randint(5,10)
+        elif i > 1000:
+            sums[i] = sums[i] * random.randint(4,10)
+        elif i > 800:
+            sums[i] = sums[i] * random.randint(3,10)
+        elif i > 500:
+            sums[i] = sums[i] * random.randint(2,10)
+        else:
+            sums[i] = sums[i] * random.randint(1,10)
+    
+    if sums[0] > sums[1]:
+        return 0
+    elif sums[1] > sums[0]:
+        return 1
+    else: 
+        return 1
+
+def compute_competition(conn,cur):
+    print("\nWhat competition do you want to see the results of? ")
+    print("1. Mens Heavyweights")
+    print("2. Mens Middleweights")
+    print("3. Womens Bantamweight")
+    print("4. Womens Strawweight")
+    while True:
+        try: 
+            i = int(input())
+        except ValueError:
+            print("please enter one of the options")
+        else:
+            if i > 4:
+                print("please enter a valid number")
+            else:
+                break
+   
+    if i == 1:
+        data = "Mens_Heavyweights"
+    elif i == 2:
+        data = "Mens_Middleweights"
+    elif i == 3:
+        data = "Womens_Bantamweight"
+    elif i == 4:
+        data = "Womens_Strawweight"
+        
+        
+        
+    cmd = """SELECT * FROM {}""".format(data)
+    cur.execute(cmd)
+    fighters = cur.fetchall()
+    
+    cmd = """SELECT Competitions.start_time, competitions.date
+            FROM Competitions 
+            WHERE Competitions.event = ?"""
+    cur.execute(cmd,(data,))
+    competitions = cur.fetchall()
+
+    if len(fighters) >= 16:
+        i = 0
+        j = 0
+        winner = 0
+        winner_list = []
+        print("\n\n\n\t\tRound of 16:\n\n")
+        while(i < len(fighters)):
+            print("\t\tStarts at:",competitions[j][0])
+            winner = getWinner(fighters[i][5:13],fighters[i+1][5:13])
+            print(fighters[i][0])
+            print("    vs.               The winner is {}".format(fighters[winner + i][0]))
+            print(fighters[i+1][0])
+            winner_list.append(fighters[winner + i])
+            i += 2
+            j += 1
+            
+        
+        i = 0
+        print("\n\n\n\t\tNext Round: Quarter Finals\n\n")
+        other_list = []
+        while(i < len(winner_list)):
+            print("\t\tStarts at:",competitions[j][0])
+            winner = getWinner(winner_list[i][5:13],winner_list[i+1][5:13])
+            print(winner_list[i][0])
+            print("    vs.               The winner is {}".format(winner_list[winner + i][0]))
+            print(winner_list[i+1][0],"\n")
+            other_list.append(winner_list[winner + i])
+            i += 2
+            j += 1
+        i = 0
+        print("\n\n\n\t\tNext Round: Semi Finals\n\n")
+        
+        other_list2 = []
+        while(i < len(other_list)):
+            print("\t\tStarts at:",competitions[j][0])
+            winner = getWinner(other_list[i][5:13],other_list[i+1][5:13])
+            print(other_list[i][0])
+            print("    vs.               The winner is {}".format(other_list[winner + i][0]))
+            print(other_list[i+1][0],"\n")
+            other_list2.append(other_list[winner + i])
+            i += 2
+            j += 1
+    
+        
+        i = 0
+        print("\n\n\n\t\tNext Round: Finals\n\n")
+        finalist = []
+        while(i < len(other_list2)):
+            print("\t\tStarts at:",competitions[j][0])
+            winner = getWinner(other_list2[i][5:13],other_list2[i+1][5:13])
+            print(other_list2[i][0])
+            print("    vs.               The winner is {}".format(other_list2[winner + i][0]))
+            print(other_list2[i+1][0],"\n")
+            finalist.append(other_list2[winner + i])
+            i += 2
+            j += 1
+        
+       
+        print(finalist)
+        if winner == 0:
+            finalist.append(other_list2[winner+1])
+            cmd = """UPDATE Awards 
+                     SET winner = ?, id = ?
+                     WHERE Awards.event = ? AND Awards.place = "First";"""
+            cur.execute(cmd,(str(finalist[0][0]),int(finalist[0][4]),data,))
+            conn.commit
+            cmd = """UPDATE Awards 
+                     SET winner = ?, id = ?
+                     WHERE Awards.event = ? AND Awards.place = "Second";"""
+            cur.execute(cmd,(str(finalist[1][0]),int(finalist[1][4]),data,))
+            conn.commit
+        else:
+            finalist.append(other_list2[winner - 1])
+            cmd = """UPDATE Awards 
+                     SET winner = ?, id = ?
+                     WHERE Awards.event = ? AND Awards.place = "First";"""
+            cur.execute(cmd,(str(finalist[0][0]),int(finalist[0][4]),data,))
+            conn.commit
+            cmd = """UPDATE Awards 
+                     SET winner = ?, id = ?
+                     WHERE Awards.event = ? AND Awards.place = "Second";"""
+            cur.execute(cmd,(str(finalist[1][0]),int(finalist[1][4]),data,))
+            conn.commit
+        
+        
+    else:
+        print("Sorry, Need to add ",str(16 -len(fighters))," fighters")
+    
+    
+    
 def fill_heavyweight_db(conn, cur):
     with open('Heavyweights.csv', 'r', newline='') as file:
         reader = csv.DictReader(file)
@@ -24,6 +379,7 @@ def fill_heavyweight_db(conn, cur):
             name,
             age,
             sex,
+            sponsor,
             ID,
             phone_number,
             fights,
@@ -35,9 +391,9 @@ def fill_heavyweight_db(conn, cur):
             strike_accuracy,
             take_down_accuracy
             )
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'male',id_number,phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
+            cur.execute(cmd,(stats[0],stats[1],'male',stats[2],id_number,phone_number,int(stats[3]),int(stats[4]),int(stats[6]),int(stats[8]),int(stats[9]),int(stats[10]),float(stats[5]),float(stats[7])))
             conn.commit
             phone_number += 3
             id_number += 1
@@ -58,6 +414,7 @@ def fill_middleweight_db(conn, cur):
             name,
             age,
             sex,
+            sponsor,
             ID,
             phone_number,
             fights,
@@ -69,9 +426,9 @@ def fill_middleweight_db(conn, cur):
             strike_accuracy,
             take_down_accuracy
             )
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'male',id_number,phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
+            cur.execute(cmd,(stats[0],stats[1],'male',stats[2],id_number,phone_number,int(stats[3]),int(stats[4]),int(stats[6]),int(stats[8]),int(stats[9]),int(stats[10]),float(stats[5]),float(stats[7])))
             conn.commit
             phone_number += 3
             id_number += 1
@@ -87,10 +444,11 @@ def fill_womens_bantamweight_db(conn, cur):
             for j in header:
                 stats.append(i[j])
             cmd = """
-            INSERT INTO Womens_Bantaweight(
+            INSERT INTO Womens_Bantamweight(
             name,
             age,
             sex,
+            sponsor,
             ID,
             phone_number,
             fights,
@@ -102,9 +460,9 @@ def fill_womens_bantamweight_db(conn, cur):
             strike_accuracy,
             take_down_accuracy
             )
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'male',id_number,phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
+            cur.execute(cmd,(stats[0],stats[1],'male',stats[2],id_number,phone_number,int(stats[3]),int(stats[4]),int(stats[6]),int(stats[8]),int(stats[9]),int(stats[10]),float(stats[5]),float(stats[7])))
             conn.commit
             phone_number += 3     
             id_number += 1
@@ -114,16 +472,18 @@ def fill_womens_strawweight_db(conn, cur):
         reader = csv.DictReader(file)
         header = reader.fieldnames
         phone_number = 7143172612
-        id_number = 1000001
+        id_number = 2000001
+        
         for i in reader:
             stats = []
             for j in header:
                 stats.append(i[j])
             cmd = """
-            INSERT INTO Womens_Bantaweight(
+            INSERT INTO Womens_Strawweight(
             name,
             age,
             sex,
+            sponsor,
             ID,
             phone_number,
             fights,
@@ -135,12 +495,12 @@ def fill_womens_strawweight_db(conn, cur):
             strike_accuracy,
             take_down_accuracy
             )
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],'male',id_number,phone_number,int(stats[2]),int(stats[3]),int(stats[5]),int(stats[7]),int(stats[8]),int(stats[9]),float(stats[4]),float(stats[6])))
+            cur.execute(cmd,(stats[0],stats[1],'male',stats[2],id_number,phone_number,int(stats[3]),int(stats[4]),int(stats[6]),int(stats[8]),int(stats[9]),int(stats[10]),float(stats[5]),float(stats[7])))
             conn.commit
             phone_number += 3    
-            id_number += 1   
+            id_number += 1
 
 def fill_awards(conn,cur):
     with open('awards.csv', 'r', newline='') as file:
@@ -152,10 +512,10 @@ def fill_awards(conn,cur):
             for j in header:
                 stats.append(i[j])
             cmd = """
-            INSERT INTO Awards(event,place,award)
-            VALUES(?,?,?)
+            INSERT INTO Awards(winner,id,event,place,award)
+            VALUES(?,?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],stats[2]))
+            cur.execute(cmd,("None","None",str(stats[0]),stats[1],stats[2]))
             conn.commit
 
 def fill_competitions(conn,cur):
@@ -166,19 +526,18 @@ def fill_competitions(conn,cur):
             stats = []
             for j in header:
                 stats.append(i[j])
-            print(stats)
             cmd = """
-            INSERT INTO Competitions(event,start_time,date)
-            VALUES(?,?,?)
+            INSERT INTO Competitions(event,start_time,date,stage)
+            VALUES(?,?,?,?)
             """
-            cur.execute(cmd,(stats[0],stats[1],stats[2]))
+            cur.execute(cmd,(str(stats[0]),stats[1],stats[2],stats[3]))
             conn.commit
             
 def create_db(conn, cur):
     cur.executescript("""
     DROP TABLE IF EXISTS Mens_Heavyweights;
     DROP TABLE IF EXISTS Mens_Middleweights;
-    DROP TABLE IF EXISTS Womens_Bantaweight;
+    DROP TABLE IF EXISTS Womens_Bantamweight;
     DROP TABLE IF EXISTS Womens_Strawweight;
     DROP TABLE IF EXISTS Awards;
     DROP TABLE IF EXISTS Competitions;
@@ -190,6 +549,7 @@ def create_db(conn, cur):
         name TEXT,
         age TEXT,
         sex TEXT,
+        sponsor TEXT,
         ID INTEGER UNIQUE,
         phone_number INTEGER UNIQUE,
         fights INTEGER,
@@ -205,6 +565,7 @@ def create_db(conn, cur):
         name TEXT,
         age TEXT,
         sex TEXT,
+        sponsor TEXT,
         ID INTEGER UNIQUE,
         phone_number INTEGER UNIQUE,
         fights INTEGER,
@@ -216,10 +577,11 @@ def create_db(conn, cur):
         strike_accuracy REAL,
         take_down_accuracy REAL
         );
-    CREATE TABLE Womens_Bantaweight(
+    CREATE TABLE Womens_Bantamweight(
         name TEXT,
         age TEXT,
         sex TEXT,
+        sponsor TEXT,
         ID INTEGER UNIQUE,
         phone_number INTEGER UNIQUE,
         fights INTEGER,
@@ -235,6 +597,7 @@ def create_db(conn, cur):
         name TEXT,
         age TEXT,
         sex TEXT,
+        sponsor TEXT,
         ID INTEGER UNIQUE,
         phone_number INTEGER UNIQUE,
         fights INTEGER,
@@ -247,6 +610,8 @@ def create_db(conn, cur):
         take_down_accuracy REAL
         );
     CREATE TABLE Awards(
+        winner TEXT,
+        id INTEGER,
         event TEXT,
         place TEXT,
         award TEXT
@@ -254,7 +619,8 @@ def create_db(conn, cur):
     CREATE TABLE Competitions(
         event TEXT,
         start_time TEXT,
-        date TEXT
+        date TEXT,
+        stage TEXT
     )
     """
     cur.executescript(create_tables)
@@ -266,6 +632,7 @@ def test_db(conn,cur):
     """
     cur.execute(cmd)
     stats = cur.fetchall()
+    print("\n\n")
     for i in stats:
         print(i)
     
@@ -274,15 +641,19 @@ def test_db(conn,cur):
     """
     cur.execute(cmd)
     stats = cur.fetchall()
+    print("\n\n")
     for i in stats:
+        
         print(i)
     
     cmd = """
-    SELECT * FROM Womens_Bantaweight
+    SELECT * FROM Womens_Bantamweight
     """
     cur.execute(cmd)
     stats = cur.fetchall()
+    print("\n\n")
     for i in stats:
+        
         print(i)
     
     cmd = """
@@ -290,7 +661,9 @@ def test_db(conn,cur):
     """
     cur.execute(cmd)
     stats = cur.fetchall()
+    print("\n\n")
     for i in stats:
+        
         print(i)
         
     cmd = """
@@ -308,29 +681,210 @@ def test_db(conn,cur):
     stats = cur.fetchall()
     for i in stats:
         print(i)
+#DISPLAY 
+# def print_records(records, column_headers):
+#     """Pretty print the records with given column headers"""
+#     # Create a format string making each column left aligned and 30 characters wide
+#     fmt_string = "{:<30}" * len(column_headers)
+#     # Print header row
+#     print(fmt_string.format(*column_headers))
+#     # Print records
+#     # records is a list of tuples
+#     # each tuple is a specific record in the database
+#     # *row expands the tuple into separate arguments for format
+#     for row in records:
+#         print(fmt_string.format(*row))
         
-def add_fighter(conn,cur,database):
+def display_all_comp(conn,cur):
+    print("    ~~~ALL COMPETITORS~~~") 
+    comp = []
+    cmd = """
+    SELECT Mens_Heavyweights.name, Mens_Heavyweights.ID FROM Mens_Heavyweights
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        comp.append((i[0],i[1]))
+    cmd = """
+    SELECT Mens_Middleweights.name, Mens_Middleweights.ID FROM Mens_Middleweights
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        comp.append((i[0],i[1]))
+    cmd = """
+    SELECT Womens_Bantamweight.name, Womens_Bantamweight.ID FROM Womens_Bantamweight
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        comp.append((i[0],i[1]))
+    cmd = """
+    SELECT Womens_Strawweight.name, Womens_Strawweight.ID FROM Womens_Strawweight
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        comp.append((i[0],i[1]))
+    comp = sorted(comp)
+    for a, *b in comp:
+        #print('\t{:<10}\t{:<10}'.format(i[0],i[1]))
+        print(a, " " .join(map(str,b)))
     
-    cmd = "SELECT COUNT(*) FROM {}".format(database)
+        
+def display_each_event(conn,cur):
+    cmd = """
+    SELECT Competitions.stage, Competitions.date, Competitions.start_time FROM Competitions Where Competitions.event = 'Mens_Heavyweights'
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    print("\nHere are all the date and times for the Mens Heavyweight fights\n")
+    print_records(stats, ["Stage","Date","Time"])
+
+    cmd = """
+    SELECT Competitions.stage, Competitions.date, Competitions.start_time FROM Competitions Where Competitions.event = 'Mens_Middleweights'
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    print("\nHere are all the date and times for the Mens Middleweights fights\n")
+    print_records(stats, ["Stage","Date","Time"])
+    
+    cmd = """
+    SELECT Competitions.stage, Competitions.date, Competitions.start_time FROM Competitions Where Competitions.event = 'Womens_Bantamweight'
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    print("\nHere are all the date and times for the Womens Bantaweight fights\n")
+    print_records(stats, ["Stage","Date","Time"])
+    
+    cmd = """
+    SELECT Competitions.stage, Competitions.date, Competitions.start_time FROM Competitions Where Competitions.event = 'Womens_Strawmweight'
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    print("\nHere are all the date and times for the Womens Strawweight fights\n")
+    print_records(stats, ["Stage","Date","Time"])
+    
+    
+    
+def display_all_competitor_male(conn,cur):
+    male = []
+    cmd = """
+    SELECT Mens_Heavyweights.name FROM Mens_Heavyweights
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        male.append(i[0])
+    cmd = """
+    SELECT Mens_Middleweights.name FROM Mens_Middleweights
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        male.append(i[0])
+    male = sorted(male)
+    print("\n   ~~~ALL MALE COMPETITORS~~~") 
+    for i in male:
+        print('\t{:<5}'.format(i))
+
+
+def display_all_competitor_female(conn,cur):
+    female = []
+    cmd = """
+    SELECT Womens_Bantamweight.name FROM Womens_Bantamweight
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        female.append(i[0])
+    cmd = """
+    SELECT Womens_Strawweight.name FROM Womens_Strawweight
+    """
+    cur.execute(cmd)
+    stats = cur.fetchall()
+    for i in stats:
+        female.append(i[0])
+    female = sorted(female)
+    print("\n~~~ALL FEMALE COMPETITORS~~~")
+    for i in female:
+        print('\t{:<5}'.format(i))
+
+def add_fighter(conn,cur):
+    print("\nWhat competition are they in")
+    print("1. Mens Heavyweights")
+    print("2. Mens Middleweights")
+    print("3. Womens Bantamweight")
+    print("4. Womens Strawweight")
+    while True:
+        try: 
+            i = int(input())
+        except ValueError:
+            print("please enter one of the options")
+        else:
+            if i > 4:
+                print("please enter a valid number")
+            else:
+                break
+   
+    if i == 1:
+        data = "Mens_Heavyweights"
+    elif i == 2:
+        data = "Mens_Middleweights"
+    elif i == 3:
+        data = "Womens_Bantamweight"
+    elif i == 4:
+        data = "Womens_Strawweight"
+        
+    cmd = "SELECT COUNT(*) FROM {}".format(data)
     cur.execute(cmd)
     size = cur.fetchall()
     if size[0][0] >= 16:
         print("Sorry, this competition is full")
     else:
         text = ['name','age','sex']
-        integer = ['id number','phone number','fights','strikes','take downs','knock downs','reversals','submissions']
+        personal = ['id number','phone number','sponsor']
+        integer = ['fights','strikes','take downs','knock downs','reversals','submissions']
         DOUBLE = ['strike accuracy','take down accuracy']
         print("In order to add a comptetor you need to provid some information")
         tupe = ()
         for i in text:
-            info = input("Enter the competetors {} ".format(i))
-            tupe += (info,)
+             while True:
+                try:
+                    info = str(input("Enter the competetors {} ".format(i)))
+                    tupe += (info,)
+                except ValueError:
+                    print("Please enter a string")
+                else:
+                    break
+        tupe += ()
+        for i in personal:
+            while True:
+                try:
+                    info = input("Enter the competetors {} ".format(i))
+                    tupe += (info,)
+                except ValueError:
+                    print("Please enter a number")
+                else:
+                    break
         for i in integer:
-            info = int(input("How many {} do they have ".format(i)))
-            tupe += (info,)
+            while True:
+                try:
+                    info = input("Enter the competetors {} ".format(i))
+                    tupe += (info,)
+                except ValueError:
+                    print("Please enter a number")
+                else:
+                    break
         for i in DOUBLE:
-            info = float(input("What is their {} ".format(i)))
-            tupe += (info,)
+            while True:
+                try:
+                    info = input("Enter the competetors {} ".format(i))
+                    tupe += (info,)
+                except ValueError:
+                    print("Please enter a number")
+                else:
+                    break
         
         cmd = """
             INSERT INTO {}(
@@ -338,6 +892,7 @@ def add_fighter(conn,cur,database):
             age,
             sex,
             ID,
+            sponsor,
             phone_number,
             fights,
             strikes,
@@ -348,43 +903,116 @@ def add_fighter(conn,cur,database):
             strike_accuracy,
             take_down_accuracy
             )
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
-            """.format(database)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """.format(data)
         cur.execute(cmd,tupe)
         conn.commit
-def generate_graph(x, y, user):
-    # Graphing fighter's efficiency either when striking or attempting take downs
-    # Paramters will be x and y axis, along with string that speficies type of graph
-    # x = total number of strikes/takedowns
-    # y = striking accuaracy/take down accuracy
-    fig = plt.figure()
-    ax = fig.subplots(1, 1)
-    ax.scatter(x, y, c="b", marker='8')
-
-    if user.lower() == 's':
-        ax.set_title("Striking Efficiency")
-        ax.set_xlabel("Total Strikes")
-        ax.set_ylabel("Strike Accuracy")
-    elif user.lower() == "t":
-        ax.set_title("Take Down Efficiency")
-        ax.set_xlabel("Total Take Downs")
-        ax.set_ylabel("Take Down Accuracy")
 
 
-    fig.savefig("UFC_Graph.png")
+def menu():
+#     print("""
+# |==============================================================|
+# |   .______     ______   ___   ___  __  .__   __.   _______    |
+# |   |   _  \   /  __  \  \  \ /  / |  | |  \ |  |  /  _____|   |
+# |   |  |_)  | |  |  |  |  \  V  /  |  | |   \|  | |  |  __     |
+# |   |   _  <  |  |  |  |   >   <   |  | |  . `  | |  | |_ |    |
+# |   |  |_)  | |  `--'  |  /  .  \  |  | |  |\   | |  |__| |    |
+# |   |______/   \______/  /__/ \__\ |__| |__| \__|  \______|    |
+# |                                                              |
+# |==============================================================|
+# """)
+    print("\nWhat would you like to do?")
+    print("1. Modify data")
+    print("2. Generate graph")
+    print("3. Display all boxers")
+    print("4. Look up information")
+    print("5. Quit")
+    print()
 
+def modify(conn,cur):
+    print()
+    print("1. Add Fighter")
+    print("2. Delete Fighter")
+    print("3. Update Stats or Info")
+    print("4. Quit")
+    print()
+    while True:
+        try:
+            choice = int(input())
+        except ValueError:
+            print("Please enter one of the options")
+        else:
+            break
+    if choice == 4:
+        return choice
+    elif choice == 1:
+        add_fighter(conn, cur)
+    elif choice == 2:
+        delete_fighter(conn,cur)
+    elif choice == 3:
+        update_records(conn,cur)
+    
+    
+    
+def display(conn,cur):
+    print("\nWhat do you want to display:")
+    print("1. All Cometitors")
+    print("2. Only Male Competitors")
+    print("3. Only Female Competitors")
+    print("4. All Competitions")
+    print("5. All Winners of Each Event")
+    print("5. Exit\n")
+    while True:
+        try:
+            choice = int(input())
+        except ValueError:
+            print("Please enter one of the options")
+        else:
+            break
+    if choice == 6:
+        return choice
+    elif choice == 1:
+        display_all_comp(conn,cur)
+    elif choice == 2:
+        display_all_competitor_male(conn,cur)
+    elif choice == 3:
+        display_all_competitor_female(conn,cur)
+    elif choice == 4:
+        display_each_event(conn,cur)
+    elif choice == 4:
+        pass
+        
+        
+    
+def look_up(conn, cur):
+    print()
+    print("What do you want to look up?")
+    print("1. Fighters ID")
+    print("2. Fighters Information")
+    print("3. Fihgters Overall Score")
+    print("4. Events Winner")
+    print("5. Quit")
+    print()
+    while True:
+        try:
+            choice = int(input())
+        except ValueError:
+            print("Please enter one of the options")
+        else:
+            break
+    if choice == 1:
+        pass
+    elif choice == 1:
+        get_fighter_by_id(conn,cur)
+    elif choice == 2:
+        pass
+    elif choice == 3:
+        pass
+    elif choice == 4:
+        pass
 
-# NEEDED FUNCTIONS
-# User functions (modify and delete records)
-# Many-to-Many relationship with corresponding junction table
-
-# DISPLAYS
-# Competitors and their bib numbers
-
-# ALLOW USER TO LOOK UP
-# Person's id given name, event, and age
-# Person's overall stat correlated to wins given name or id
-# Person's awards given id
+#def interface():
+   
 
 def main():
     conn , cur = connect()
@@ -393,7 +1021,83 @@ def main():
     fill_middleweight_db(conn,cur)
     fill_womens_bantamweight_db(conn,cur)
     fill_womens_strawweight_db(conn,cur)
+    fill_awards(conn,cur)
+    fill_competitions(conn,cur)
+    
+    #update_records(conn,cur)
+    #delete_fighter(conn,cur)
+    # display_all_competitor_female(conn,cur)
+    # display_all_competitor_male(conn,cur)
+    # display_each_event(conn,cur)
+    display_all_comp(conn,cur)
+    #display_each_event(conn,cur)
     #test_db(conn,cur)
-    generate_graph([80, 70, 90, 50], [10.5, 26.7, 38.9, 45.6], 's')     # List of fighter's strikes, then list of fighter's accuracy
+    #lis = compute_competition(conn,cur,"Mens_Heavyweights")
+    #print(lis)
+    #interface()
+    #get_fighter_by_id(conn,cur)
+    compute_competition(conn,cur)
+    #add_fighter(conn, cur)
+    # i = int(input("what do you want to do "))
+    # while (i != 5):
+    #     if i == 1:
+    #         add_fighter(conn, cur, "Mens_Heavyweights")
+    #     i = int(input("what do you want to do "))
+    test_db(conn,cur)
+#     print("""
+# |==============================================================|
+# |   .______     ______   ___   ___  __  .__   __.   _______    |
+# |   |   _  \   /  __  \  \  \ /  / |  | |  \ |  |  /  _____|   |
+# |   |  |_)  | |  |  |  |  \  V  /  |  | |   \|  | |  |  __     |
+# |   |   _  <  |  |  |  |   >   <   |  | |  . `  | |  | |_ |    |
+# |   |  |_)  | |  `--'  |  /  .  \  |  | |  |\   | |  |__| |    |
+# |   |______/   \______/  /__/ \__\ |__| |__| \__|  \______|    |
+# |                                                              |
+# |==============================================================|
+# """)
+#     print("Hi. Welcome to our boxing database. What would you like to do?")
+#     print("1. Modify data")
+#     print("2. Generate graph")
+#     print("3. Display all boxers")
+#     print("4. Look up information")
+#     print("5. Quit")
+#     print()
+#     while True:
+#         try:
+#             choice = int(input())
+#         except ValueError:
+#             print("Please enter one of the options")
+#         else:
+#             break
+#     quit = False
+#     while choice != 5:
+#         if choice == 1:
+#             choice = modify(conn, cur)
+#             # if choice == 4:
+#             #     quit = True
+#             #     choice = 5
+#         elif choice == 2:
+#             pass
+#         elif choice == 3:
+#             display(conn,cur)
+#         elif choice == 4:
+#             choice = look_up(conn,cur)
+#             # if choice == 3:
+#             #     quit = True
+#             #     choice = 5
+#         else:
+#             print("Sorry, invalid input. Try again.")
+#         if not quit:
+#             menu()
+#             while True:
+#                 try:
+#                     choice = int(input())
+#                 except ValueError:
+#                     print("Please enter one of the options")
+#                 else:
+#                     break
+#     if choice == 5:
+#         print("Goodbye!")
+    
 if __name__ == "__main__":
     main()
