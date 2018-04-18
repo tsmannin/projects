@@ -1,3 +1,5 @@
+# import main.py as m, then when calling functions use m.function_call()
+
 def menu():
     print("""
 |==============================================================|
