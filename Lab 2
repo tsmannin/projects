@@ -352,20 +352,27 @@ def add_fighter(conn,cur,database):
             """.format(database)
         cur.execute(cmd,tupe)
         conn.commit
-def generate_graph(x, y):
-    # Graphing how fighting stats correspond to wins
-    # Paramters will be x and y axis
-    # x = fight stats number (all stat categories added together)
-    # y = average number of wins (fighters likely to have same fight stats)
+def generate_graph(x, y, user):
+    # Graphing fighter's efficiency either when striking or attempting take downs
+    # Paramters will be x and y axis, along with string that speficies type of graph
+    # x = total number of strikes/takedowns
+    # y = striking accuaracy/take down accuracy
     fig = plt.figure()
     ax = fig.subplots(1, 1)
+    ax.scatter(x, y, c="b", marker='8')
 
-    ax.bar(x, y, width=5)
-    ax.set_title("How Fighter's Stats Correspond to Wins")
-    ax.set_xlabel("Fighting Stat Number (FSN)")
-    ax.set_ylabel("Average Number of Wins")
+    if user.lower() == 's':
+        ax.set_title("Striking Efficiency")
+        ax.set_xlabel("Total Strikes")
+        ax.set_ylabel("Strike Accuracy")
+    elif user.lower() == "t":
+        ax.set_title("Take Down Efficiency")
+        ax.set_xlabel("Total Take Downs")
+        ax.set_ylabel("Take Down Accuracy")
+
 
     fig.savefig("UFC_Graph.png")
+
 
 # NEEDED FUNCTIONS
 # User functions (modify and delete records)
@@ -390,6 +397,6 @@ def main():
     fill_womens_bantamweight_db(conn,cur)
     fill_womens_strawweight_db(conn,cur)
     #test_db(conn,cur)
-    #generate_graph([80, 70, 90, 50], [1, 2, 3, 4])
+    generate_graph([80, 70, 90, 50], [10.5, 26.7, 38.9, 45.6], 's')     # List of fighter's strikes, then list of fighter's accuracy
 if __name__ == "__main__":
     main()
