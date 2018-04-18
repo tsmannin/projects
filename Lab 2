@@ -1035,42 +1035,43 @@ def generate_graph(x, y, user):
 #def interface():
    
 # CODE FOR JUNCTION TABLE
-print("Enter 2 weight class: ")
-    print("1. Mens Heavyweights")
-    print("2. Mens Middleweights")
-    print("3. Womens Bantamweight")
-    print("4. Womens Strawweight")
-    num = int(input())
-    num2 = int(input())
-    data = ""
-    data2 = ""
-    if num == 1:
-        data = "Mens_Heavyweights"
-    elif num == 2:
-        data = "Mens_Middleweights"
-    elif num == 3:
-        data = "Womens_Bantamweight"
-    elif num == 4:
-        data = "Womens_Strawweight"
+def junction(conn, cur):
+        print("Enter 2 weight class: ")
+        print("1. Mens Heavyweights")
+        print("2. Mens Middleweights")
+        print("3. Womens Bantamweight")
+        print("4. Womens Strawweight")
+        num = int(input())
+        num2 = int(input())
+        data = ""
+        data2 = ""
+        if num == 1:
+            data = "Mens_Heavyweights"
+        elif num == 2:
+            data = "Mens_Middleweights"
+        elif num == 3:
+            data = "Womens_Bantamweight"
+        elif num == 4:
+            data = "Womens_Strawweight"
 
-    if num2 == 1:
-        data2 = "Mens_Heavyweights"
-    elif num2 == 2:
-        data2 = "Mens_Middleweights"
-    elif num2 == 3:
-        data2 = "Womens_Bantamweight"
-    elif num2 == 4:
-        data2 = "Womens_Strawweight"
+        if num2 == 1:
+            data2 = "Mens_Heavyweights"
+        elif num2 == 2:
+            data2 = "Mens_Middleweights"
+        elif num2 == 3:
+            data2 = "Womens_Bantamweight"
+        elif num2 == 4:
+            data2 = "Womens_Strawweight"
 
-    cmd = """
-    SELECT {}.name, {}.name, {}.age, {}.age
-    FROM {} INNER JOIN {}
-    ON {}.age = {}.age
-    ORDER BY {}.age, {}.name;
-    """.format(data, data2, data, data2, data, data2, data, data2, data, data)
-    cur.execute(cmd)
-    l = cur.fetchall()
-    print_records(l, ["{} Name".format(data), "{} Name".format(data2), "{} Sponsor".format(data), "{} Sponsor".format(data2)])
+        cmd = """
+        SELECT {}.name, {}.name, {}.age, {}.age
+        FROM {} INNER JOIN {}
+        ON {}.age = {}.age
+        ORDER BY {}.age, {}.name;
+        """.format(data, data2, data, data2, data, data2, data, data2, data, data)
+        cur.execute(cmd)
+        l = cur.fetchall()
+        print_records(l, ["{} Name".format(data), "{} Name".format(data2), "{} Sponsor".format(data), "{} Sponsor".format(data2)])
     
 def main():
     conn , cur = connect()
