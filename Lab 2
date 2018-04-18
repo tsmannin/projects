@@ -377,15 +377,12 @@ def generate_graph(x, y, user):
 # NEEDED FUNCTIONS
 # User functions (modify and delete records)
 # Many-to-Many relationship with corresponding junction table
-# Dynamically generate graph of database
 
 # DISPLAYS
-# All competitors alphabetically, male comps, female comps, comps and id numbers
-# All events by starting time, comps in each event, winner of each event
+# Competitors and their bib numbers
 
 # ALLOW USER TO LOOK UP
 # Person's id given name, event, and age
-# Person's info given id
 # Person's overall stat correlated to wins given name or id
 # Person's awards given id
 
