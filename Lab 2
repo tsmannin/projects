@@ -1011,6 +1011,27 @@ def look_up(conn, cur):
     elif choice == 4:
         pass
 
+def generate_graph(x, y, user):
+    # Graphing fighter's efficiency either when striking or attempting take downs
+    # Paramters will be x and y axis, along with string that speficies type of graph
+    # x = total number of strikes/takedowns
+    # y = striking accuaracy/take down accuracy
+    fig = plt.figure()
+    ax = fig.subplots(1, 1)
+    ax.scatter(x, y, c="b", marker='8')
+
+    if user.lower() == 's':
+        ax.set_title("Striking Efficiency")
+        ax.set_xlabel("Total Strikes")
+        ax.set_ylabel("Strike Accuracy")
+    elif user.lower() == "t":
+        ax.set_title("Take Down Efficiency")
+        ax.set_xlabel("Total Take Downs")
+        ax.set_ylabel("Take Down Accuracy")
+
+
+    fig.savefig("UFC_Graph.png")
+    
 #def interface():
    
 
@@ -1077,7 +1098,17 @@ def main():
 #             #     quit = True
 #             #     choice = 5
 #         elif choice == 2:
-#             pass
+#           cmd = """
+            Mens_Middleweights.strikes FROM Mens_Middleweights
+            """
+            cmd2 = """
+            Mens_Middleweights.strike_accuracy FROM Mens_Middleweights
+            """
+            cur.execute(cmd)
+            strike = cur.fetchall()
+            cur.execute(cmd2)
+            acc = cur.fetchall()
+            generate_graph(strike, acc, 's')
 #         elif choice == 3:
 #             display(conn,cur)
 #         elif choice == 4:
