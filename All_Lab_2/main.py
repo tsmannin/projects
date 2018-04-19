@@ -1,5 +1,8 @@
 import csv
 import sqlite3 as sq
+import matplotlib
+matplotlib.use("Agg") # so that we don't need GUI
+import matplotlib.pyplot as plt
 import look_up as l
 import display as d
 import modify as m
@@ -14,7 +17,7 @@ def connect():
 create_db creates the databases
 """
 def getWinner(lis1,lis2):
-    sum1 = 0 
+    sum1 = 0
     sum2 = 0
     for i in range(0 , 6):
         sum1 += lis1[i]
@@ -31,12 +34,12 @@ def getWinner(lis1,lis2):
             sums[i] = sums[i] * random.randint(2,10)
         else:
             sums[i] = sums[i] * random.randint(1,10)
-    
+
     if sums[0] > sums[1]:
         return 0
     elif sums[1] > sums[0]:
         return 1
-    else: 
+    else:
         return 1
 
 def compute_competition(conn,cur):
@@ -46,7 +49,7 @@ def compute_competition(conn,cur):
     print("3. Womens Bantamweight")
     print("4. Womens Strawweight")
     while True:
-        try: 
+        try:
             i = int(input())
         except ValueError:
             print("please enter one of the options")
@@ -55,7 +58,7 @@ def compute_competition(conn,cur):
                 print("please enter a valid number")
             else:
                 break
-   
+
     if i == 1:
         data = "Mens_Heavyweights"
     elif i == 2:
@@ -64,15 +67,15 @@ def compute_competition(conn,cur):
         data = "Womens_Bantamweight"
     elif i == 4:
         data = "Womens_Strawweight"
-        
-        
-        
+
+
+
     cmd = """SELECT * FROM {}""".format(data)
     cur.execute(cmd)
     fighters = cur.fetchall()
-    
+
     cmd = """SELECT Competitions.start_time, competitions.date
-            FROM Competitions 
+            FROM Competitions
             WHERE Competitions.event = ?"""
     cur.execute(cmd,(data,))
     competitions = cur.fetchall()
@@ -93,8 +96,8 @@ def compute_competition(conn,cur):
             winner_list.append(fighters[winner + i])
             i += 2
             j += 1
-            
-        
+
+
         i = 0
         print("\n\n\n\t\tNext Round: Quarter Finals\n\n")
         other_list = []
@@ -109,7 +112,7 @@ def compute_competition(conn,cur):
             j += 1
         i = 0
         print("\n\n\n\t\tNext Round: Semi Finals\n\n")
-        
+
         other_list2 = []
         while(i < len(other_list)):
             print("\t\tStarts at:",competitions[j][0])
@@ -120,8 +123,8 @@ def compute_competition(conn,cur):
             other_list2.append(other_list[winner + i])
             i += 2
             j += 1
-    
-        
+
+
         i = 0
         print("\n\n\n\t\tNext Round: Finals\n\n")
         finalist = []
@@ -134,39 +137,39 @@ def compute_competition(conn,cur):
             finalist.append(other_list2[winner + i])
             i += 2
             j += 1
-        
-       
+
+
         if winner == 0:
             finalist.append(other_list2[winner+1])
-            cmd = """UPDATE Awards 
+            cmd = """UPDATE Awards
                      SET winner = ?, id = ?
                      WHERE Awards.event = ? AND Awards.place = "First";"""
             cur.execute(cmd,(str(finalist[0][0]),int(finalist[0][4]),data,))
             conn.commit
-            cmd = """UPDATE Awards 
+            cmd = """UPDATE Awards
                      SET winner = ?, id = ?
                      WHERE Awards.event = ? AND Awards.place = "Second";"""
             cur.execute(cmd,(str(finalist[1][0]),int(finalist[1][4]),data,))
             conn.commit
         else:
             finalist.append(other_list2[winner - 1])
-            cmd = """UPDATE Awards 
+            cmd = """UPDATE Awards
                      SET winner = ?, id = ?
                      WHERE Awards.event = ? AND Awards.place = "First";"""
             cur.execute(cmd,(str(finalist[0][0]),int(finalist[0][4]),data,))
             conn.commit
-            cmd = """UPDATE Awards 
+            cmd = """UPDATE Awards
                      SET winner = ?, id = ?
                      WHERE Awards.event = ? AND Awards.place = "Second";"""
             cur.execute(cmd,(str(finalist[1][0]),int(finalist[1][4]),data,))
             conn.commit
-        
-        
+
+
     else:
         print("Sorry, Need to add ",str(16 -len(fighters))," fighters")
-    
-    
-    
+
+
+
 def fill_heavyweight_db(conn, cur):
     with open('Heavyweights.csv', 'r', newline='') as file:
         reader = csv.DictReader(file)
@@ -235,7 +238,7 @@ def fill_middleweight_db(conn, cur):
             conn.commit
             phone_number += 3
             id_number += 1
-            
+
 def fill_womens_bantamweight_db(conn, cur):
     with open('womensbantamweight.csv', 'r', newline='') as file:
         reader = csv.DictReader(file)
@@ -267,7 +270,7 @@ def fill_womens_bantamweight_db(conn, cur):
             """
             cur.execute(cmd,(stats[0],stats[1],'male',stats[2],id_number,phone_number,int(stats[3]),int(stats[4]),int(stats[6]),int(stats[8]),int(stats[9]),int(stats[10]),float(stats[5]),float(stats[7])))
             conn.commit
-            phone_number += 3     
+            phone_number += 3
             id_number += 1
 
 def fill_womens_strawweight_db(conn, cur):
@@ -276,7 +279,7 @@ def fill_womens_strawweight_db(conn, cur):
         header = reader.fieldnames
         phone_number = 7143172612
         id_number = 2000001
-        
+
         for i in reader:
             stats = []
             for j in header:
@@ -302,14 +305,14 @@ def fill_womens_strawweight_db(conn, cur):
             """
             cur.execute(cmd,(stats[0],stats[1],'male',stats[2],id_number,phone_number,int(stats[3]),int(stats[4]),int(stats[6]),int(stats[8]),int(stats[9]),int(stats[10]),float(stats[5]),float(stats[7])))
             conn.commit
-            phone_number += 3    
+            phone_number += 3
             id_number += 1
 
 def fill_awards(conn,cur):
     with open('awards.csv', 'r', newline='') as file:
         reader = csv.DictReader(file)
         header = reader.fieldnames
-    
+
         for i in reader:
             stats = []
             for j in header:
@@ -335,7 +338,7 @@ def fill_competitions(conn,cur):
             """
             cur.execute(cmd,(str(stats[0]),stats[1],stats[2],stats[3]))
             conn.commit
-            
+
 def create_db(conn, cur):
     cur.executescript("""
     DROP TABLE IF EXISTS Mens_Heavyweights;
@@ -345,7 +348,7 @@ def create_db(conn, cur):
     DROP TABLE IF EXISTS Awards;
     DROP TABLE IF EXISTS Competitions;
     """)
-    
+
     # create Tables
     create_tables = """
     CREATE TABLE Mens_Heavyweights(
@@ -429,7 +432,7 @@ def create_db(conn, cur):
     cur.executescript(create_tables)
     conn.commit
 
-    
+
 def menu():
     print("\n1. Modify data")
     print("2. Generate graph")
@@ -470,10 +473,10 @@ def modify(conn,cur):
             m.delete_fighter(conn,cur)
         elif choice == 3:
             m.update_records(conn,cur)
-        
-    
-    
-    
+
+
+
+
 def display(conn,cur):
     choice = 0
     while choice != 5:
@@ -488,7 +491,7 @@ def display(conn,cur):
                 choice = int(input())
             except ValueError:
                 print("\nPlease enter one of the options")
-            if choice > 4:
+            if choice > 5:
                 print("\nPlease enter a valid number")
             else:
                 break
@@ -502,9 +505,10 @@ def display(conn,cur):
             d.display_all_competitor_female(conn,cur)
         elif choice == 4:
             d.display_each_event(conn,cur)
-        
-        
-    
+
+
+
+
 def look_up(conn, cur):
     choice = 0
     while choice != 5:
@@ -521,6 +525,8 @@ def look_up(conn, cur):
                 choice = int(input())
             except ValueError:
                 print("Please enter one of the options")
+            if choice > 5:
+                print("\nPlease enter a valid number")
             else:
                 break
         if choice == 1:
@@ -531,7 +537,68 @@ def look_up(conn, cur):
             l.get_all_stats(conn,cur)
         elif choice == 4:
             l.get_event_winners(conn,cur)
-        
+
+def generate_graph(x, y, user):
+    # Graphing fighter's efficiency either when striking or attempting take downs
+    # Paramters will be x and y axis, along with string that speficies type of graph
+    # x = total number of strikes/takedowns
+    # y = striking accuaracy/take down accuracy
+    fig = plt.figure()
+    ax = fig.subplots(1, 1)
+    ax.scatter(x, y, c="b", marker='8')
+
+    if user.lower() == 's':
+        ax.set_title("Striking Efficiency")
+        ax.set_xlabel("Total Strikes")
+        ax.set_ylabel("Strike Accuracy")
+    elif user.lower() == "t":
+        ax.set_title("Take Down Efficiency")
+        ax.set_xlabel("Total Take Downs")
+        ax.set_ylabel("Take Down Accuracy")
+
+    i = 0
+    myFile = "UFC_Graph" + str(i) + ".png"
+    i += 1
+    fig.savefig(myFile)
+
+def junction(conn, cur):
+        print("Enter 2 weight class: ")
+        print("1. Mens Heavyweights")
+        print("2. Mens Middleweights")
+        print("3. Womens Bantamweight")
+        print("4. Womens Strawweight")
+        num = int(input())
+        num2 = int(input())
+        data = ""
+        data2 = ""
+        if num == 1:
+            data = "Mens_Heavyweights"
+        elif num == 2:
+            data = "Mens_Middleweights"
+        elif num == 3:
+            data = "Womens_Bantamweight"
+        elif num == 4:
+            data = "Womens_Strawweight"
+
+        if num2 == 1:
+            data2 = "Mens_Heavyweights"
+        elif num2 == 2:
+            data2 = "Mens_Middleweights"
+        elif num2 == 3:
+            data2 = "Womens_Bantamweight"
+        elif num2 == 4:
+            data2 = "Womens_Strawweight"
+
+        cmd = """
+        SELECT {}.name, {}.name, {}.age, {}.age
+        FROM {} INNER JOIN {}
+        ON {}.age = {}.age
+        ORDER BY {}.age, {}.name;
+        """.format(data, data2, data, data2, data, data2, data, data2, data, data)
+        cur.execute(cmd)
+        l = cur.fetchall()
+        d.print_records(l, ["{} Name".format(data), "{} Name".format(data2), "{} Sponsor".format(data), "{} Sponsor".format(data2)])
+
 
 def main():
     conn , cur = connect()
@@ -543,22 +610,22 @@ def main():
     fill_awards(conn,cur)
     fill_competitions(conn,cur)
     print("""
-    
+
 |==================================================================|
-|   __  ______________   __________________  __________________    | 
+|   __  ______________   __________________  __________________    |
 |  / / / / ____/ ____/  / ____/  _/ ____/ / / /_  __/ ____/ __ \   |
 | / / / / /_  / /      / /_   / // / __/ /_/ / / / / __/ / /_/ /   |
-|/ /_/ / __/ / /___   / __/ _/ // /_/ / __  / / / / /___/ _, _/    | 
+|/ /_/ / __/ / /___   / __/ _/ // /_/ / __  / / / / /___/ _, _/    |
 |\____/_/    \____/  /_/   /___/\____/_/ /_/ /_/ /_____/_/ |_|     |
 |                                                                  |
 |==================================================================|
 """)
     print("Hi. Welcome to our UFC Fighter database. What would you like to do?")
     print("1. Modify data")
-    print("2. Generate graph")
+    print("2. Generate Strike Efficiency graph")
     print("3. Display all fighters")
     print("4. Look up information")
-    print("5. Compute Cometiton")
+    print("5. Compute Competiton")
     print("6. Many To Many Relatioinships")
     print("7. Quit")
     print()
@@ -577,7 +644,32 @@ def main():
             #     quit = True
             #     choice = 5
         elif choice == 2:
-            pass
+            print("Enter a weight class: ")
+            print("1. Mens Heavyweights")
+            print("2. Mens Middleweights")
+            print("3. Womens Bantamweight")
+            print("4. Womens Strawweight")
+            num = int(input())
+            data = ""
+            if num == 1:
+                data = "Mens_Heavyweights"
+            elif num == 2:
+                data = "Mens_Middleweights"
+            elif num == 3:
+                data = "Womens_Bantamweight"
+            elif num == 4:
+                data = "Womens_Strawweight"
+            cmd = """
+            SELECT {}.strikes FROM {}
+            """.format(data, data)
+            cmd2 = """
+            SELECT {}.strike_accuracy FROM {}
+            """.format(data, data)
+            cur.execute(cmd)
+            strike = cur.fetchall()
+            cur.execute(cmd2)
+            acc = cur.fetchall()
+            generate_graph(strike, acc, 's')
         elif choice == 3:
             display(conn,cur)
         elif choice == 4:
@@ -587,6 +679,8 @@ def main():
             #     choice = 5
         elif choice == 5:
             compute_competition(conn,cur)
+        elif choice == 6:
+            junction(conn, cur)
         else:
             print("\nSorry, invalid input. Try again.\n")
         if not quit:
@@ -600,6 +694,6 @@ def main():
                     break
     if choice == 7:
         print("Goodbye!")
-    
+
 if __name__ == "__main__":
     main()
