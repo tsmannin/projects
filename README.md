@@ -1,2 +1,3 @@
-# projects
-A collection of projects worked on by Tristan Manning
+# Projects
+
+A collection of projects worked on by Tristan Manning.
