@@ -1,0 +1,13 @@
+def display(self):
+        team = self.get_players()
+        name = team[0][0]
+        print(f"{name:<20}", end='')
+        for stat in team[0][2:]:
+            print(f"{stat:<6}", end='')
+        print()
+        for stat in team[1:]:
+            player_name = stat[0]
+            print(f"{player_name:<20}", end='')
+            for s in stat[1:]:
+                print(f"{s:<6}", end='')
+            print()
