@@ -1,0 +1,5 @@
+This project utitlizes many different Python libraries to create a database of all NBA stats for each conference, team, and player in the leauge.
+
+The program first builds a URL (urllib and pathlib) based off the user's inputs, where it will either decide to look for a specific conference (East/West), one of the 30 teams in the league, or one of the hundreds of players on said teams.
+Utilizing the newly built URL, the program can scrape data from the website (BeautifulSoup) and collect all available data provided by BasketballReference.com.
+Data is written to CSV files and stored locally in the directory of the user's choosing. Once the stats are collected, the program can then easily display whatever data is of interest to the user.
